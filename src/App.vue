@@ -1,23 +1,20 @@
 <template>
-  <div class="wrapper">
-    <h1>Page with posts</h1>
-    <div class="btn-wrapper">
-        <my-button 
-        @click="fetchPosts"
-        >
-            Get posts
-        </my-button>
-        <my-button
-            @click="showDialog"
-        >
-            Create post
-        </my-button>
-    </div>    
-    <my-dialog v-model:show="dialogVisible">
-      <post-form @createPost="createPost" />
-    </my-dialog>
-    <post-list :posts="posts" @removePost="removePost" />
-  </div>
+    <div class="wrapper">
+        <h1>Page with posts</h1>
+        <div class="btn-wrapper">
+            <my-button @click="fetchPosts"> Get posts </my-button>
+            <my-button @click="showDialog"> Create post </my-button>
+        </div>
+        <my-dialog v-model:show="dialogVisible">
+            <post-form @createPost="createPost" />
+        </my-dialog>
+        <post-list
+            v-if="!isPostLoading"
+            :posts="posts" 
+            @removePost="removePost"
+        />
+        <h3 v-else>Loading...</h3>
+    </div>
 </template>
 
 <script>
@@ -25,48 +22,46 @@ import PostForm from "@/components/PostForm";
 import PostList from "@/components/PostList";
 
 export default {
-  components: {
-    PostForm,
-    PostList,
-  },
-  data() {
-    return {
-    //   posts: [
-    //     { id: 1, title: "Some title 1", body: "Body of post 1" },
-    //     { id: 2, title: "Some title 2", body: "Body of post 2" },
-    //     { id: 3, title: "Some title 3", body: "Body of post 3" },
-    //   ],
-        posts: [],
-        dialogVisible: false,
-    };
-  },
-  methods: {
-    createPost(post) {
-      if (post.title && post.body) {
-        this.posts.push(post);
-        this.dialogVisible = false
-      }
+    components: {
+        PostForm,
+        PostList,
     },
-    removePost(post) {
-      this.posts = this.posts.filter((p) => p.id !== post.id);
+    data() {
+        return {
+            posts: [],
+            dialogVisible: false,
+            isPostLoading: false,
+        };
     },
-    showDialog() {
-        this.dialogVisible = true
-    },
-    async fetchPosts() {
-        // try{
-        //     const response = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=10')
-        //     console.log(response);
-        //     this.posts = response.data
-        // }
-        // catch(error) {
-        //     alert('Error')
-        // }
+    methods: {
+        createPost(post) {
+            if (post.title && post.body) {
+                this.posts.push(post);
+                this.dialogVisible = false;
+            }
+        },
+        removePost(post) {
+            this.posts = this.posts.filter((p) => p.id !== post.id);
+        },
+        showDialog() {
+            this.dialogVisible = true;
+        },
+        fetchPosts() {
+            try {
+                this.isPostLoading = true
+                fetch("https://jsonplaceholder.typicode.com/posts?_limit=10")
+                    .then((response) => response.json())
+                    .then((data) => this.posts = data);
+            } catch (error) {
+                alert("Error");
+            } finally {
+                this.isPostLoading = false
+            }
+        },
     },
     mounted() {
-        this.fetchPosts()
+        this.fetchPosts();
     },
-  },
 };
 </script>
 
@@ -86,7 +81,7 @@ export default {
 }
 
 .btn-wrapper {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
