@@ -2,12 +2,22 @@
     <div class="post">
         <h2>{{post.title}}</h2>
         <p>{{post.body}}</p>
-        <my-button
-            class="as-fe"
-            @click="$emit('removePost', this.post)"
-        >
-            Delete
-        </my-button>
+        <p>ID: {{post.id}}</p>
+        <p>likes: {{$store.state.likes}}</p>
+        <div class="df ml-a">
+            <my-button
+                @click="$router.push(`/posts/${post.id}`)"
+                class="mr-20"
+            >
+                Open
+            </my-button>
+            <my-button
+                @click="$emit('removePost', this.post)"
+            >
+                Delete
+            </my-button>
+        </div>
+        
     </div>
 </template>
 

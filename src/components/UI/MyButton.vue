@@ -12,7 +12,7 @@ export default {
 
 <style scoped>
     .btn {
-        margin-top: 15px;
+        /* margin-top: 15px; */
         padding: 10px;
         background: none;
         color: teal;

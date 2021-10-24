@@ -4,13 +4,14 @@
         <my-input
             placeholder="Title"
             v-model="post.title"
+            v-focus
         />
         <my-input
             placeholder="Post"
             v-model="post.body"
         />
         <my-button
-            class="as-fe"
+            class="as-fe mt-20"
             @click="createPost"
         >
             Add post
